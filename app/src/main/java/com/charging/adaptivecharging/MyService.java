@@ -89,7 +89,7 @@ public class MyService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        cap=Integer.parseInt(exe.Get("cat /sys/class/power_supply/battery/charge_full_design"));
+        cap=Integer.parseInt(exe.Get("cat /sys/class/power_supply/battery/charge_full"));
         cap/=1000;
         sharedPreferences = getSharedPreferences("wakeTime", MODE_PRIVATE);
         final SharedPreferences.Editor editor = sharedPreferences.edit();
