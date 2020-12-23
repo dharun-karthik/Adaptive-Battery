@@ -8,6 +8,7 @@ import android.app.Service;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.BatteryManager;
 import android.os.Handler;
@@ -26,10 +27,11 @@ import java.util.Locale;
 public class MyService extends Service {
 
     private static final String TAG_FOREGROUND_SERVICE = "FOREGROUND_SERVICE";
-
     public static final String ACTION_START_FOREGROUND_SERVICE = "ACTION_START_FOREGROUND_SERVICE";
-
     public static final String ACTION_STOP_FOREGROUND_SERVICE = "ACTION_STOP_FOREGROUND_SERVICE";
+    public SharedPreferences sharedPreferences;
+    public Integer h;
+    public Integer m;
 
     public Handler mhandler=new Handler();
     ShellExecuter exe = new ShellExecuter();
@@ -39,17 +41,25 @@ public class MyService extends Service {
         public void run() {
             Integer hh = Integer.parseInt(new SimpleDateFormat("kk", Locale.getDefault()).format(new Date()));
             Integer mm = Integer.parseInt(new SimpleDateFormat("mm", Locale.getDefault()).format(new Date()));
+
             Float totalTime;
-            if(hh<24 && hh>6){
-                totalTime=((24-(float)hh)*60)+(6*60)+(60-mm);
+            int TC,TS;
+            TC = (hh*60)+mm;
+            TS = (h*60)+m;
+            if(TC<TS){
+                totalTime=(float)TS-TC;
             }else{
-                totalTime=(float)(hh*60)+(60-mm);
+                totalTime=(float)(1400-TC+TS);
             }
             totalTime/=60;
+
+
             BatteryManager bm = (BatteryManager)getSystemService(BATTERY_SERVICE);
             int percentage = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
-            Float cap=(float)(4000-(percentage*4000/100));
-            Integer ma=(int)(cap/totalTime);
+
+            Float caprem=(float)(4000-(percentage*4000/100));
+
+            Integer ma=(int)(caprem/totalTime);
             if(ma>=2800){
                 ma=2800;
             }else if(ma<50){
@@ -57,6 +67,8 @@ public class MyService extends Service {
             }
             ma+=50;
             ma*=1000;
+
+
             exe.Executer(ma.toString());
             Log.d("Max_current",ma.toString());
             mhandler.postDelayed(this,1200000);
@@ -76,7 +88,12 @@ public class MyService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(TAG_FOREGROUND_SERVICE, "My foreground service onCreate().");
+        sharedPreferences = getSharedPreferences("wakeTime", MODE_PRIVATE);
+        final SharedPreferences.Editor editor = sharedPreferences.edit();
+        h=sharedPreferences.getInt("hours",6);
+        m=sharedPreferences.getInt("min",0);
+        Log.d(TAG_FOREGROUND_SERVICE, m+"My foreground service onCreate()."+h);
+
     }
 
     @Override
@@ -89,7 +106,6 @@ public class MyService extends Service {
                     case ACTION_START_FOREGROUND_SERVICE:
                         startForegroundService();
                         myRunnable.run();
-
                         Toast.makeText(getApplicationContext(), "Adaptive Charging Enabled", Toast.LENGTH_LONG).show();
                         break;
                     case ACTION_STOP_FOREGROUND_SERVICE:
