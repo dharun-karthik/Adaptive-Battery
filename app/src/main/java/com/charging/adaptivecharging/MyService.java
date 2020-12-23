@@ -32,7 +32,8 @@ public class MyService extends Service {
     public SharedPreferences sharedPreferences;
     public Integer h;
     public Integer m;
-
+    public Integer cap;
+    public String max;
     public Handler mhandler=new Handler();
     ShellExecuter exe = new ShellExecuter();
 
@@ -57,11 +58,11 @@ public class MyService extends Service {
             BatteryManager bm = (BatteryManager)getSystemService(BATTERY_SERVICE);
             int percentage = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
 
-            Float caprem=(float)(4000-(percentage*4000/100));
+            Float caprem=(float)(cap-(percentage*cap/100));
 
             Integer ma=(int)(caprem/totalTime);
-            if(ma>=2800){
-                ma=2800;
+            if(ma>=Integer.parseInt(max)){
+                ma=Integer.parseInt(max);
             }else if(ma<50){
                 ma=50;
             }
@@ -88,6 +89,8 @@ public class MyService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        cap=Integer.parseInt(exe.Get("cat /sys/class/power_supply/battery/charge_full_design"));
+        cap/=1000;
         sharedPreferences = getSharedPreferences("wakeTime", MODE_PRIVATE);
         final SharedPreferences.Editor editor = sharedPreferences.edit();
         h=sharedPreferences.getInt("hours",6);
@@ -105,15 +108,16 @@ public class MyService extends Service {
                 switch (action) {
                     case ACTION_START_FOREGROUND_SERVICE:
                         startForegroundService();
+                        max=exe.Get("cat /sys/class/power_supply/battery/constant_charge_current_max");
                         myRunnable.run();
-                        Toast.makeText(getApplicationContext(), "Adaptive Charging Enabled", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getApplicationContext(), "Adaptive Charging Enabled", Toast.LENGTH_LONG).show();
                         break;
                     case ACTION_STOP_FOREGROUND_SERVICE:
                         stopForegroundService();
-                        Toast.makeText(getApplicationContext(), "Adaptive Charging Disabled", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getApplicationContext(), "Adaptive Charging Disabled", Toast.LENGTH_LONG).show();
                         mhandler.removeCallbacks(myRunnable);
-                        exe.Executer("2800000");
-                        Log.d("Reverted","2800000");
+                        exe.Executer(max);
+                        Log.d("Reverted",max);
                         break;
                 }
         }

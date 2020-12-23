@@ -2,15 +2,16 @@ package com.charging.adaptivecharging;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 public class Settings extends AppCompatActivity {
-    TextView textview1;
     TimePicker timepicker;
     Button changetime;
     public SharedPreferences sharedPreferences;
@@ -18,32 +19,31 @@ public class Settings extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_settings);
 
-        textview1=(TextView)findViewById(R.id.textView1);
         timepicker=(TimePicker)findViewById(R.id.timePicker);
         timepicker.setIs24HourView(false);
         changetime=(Button)findViewById(R.id.button1);
-        textview1.setText(getCurrentTime());
+
 
         sharedPreferences = getSharedPreferences("wakeTime", MODE_PRIVATE);
         final SharedPreferences.Editor editor = sharedPreferences.edit();
-        textview1.setText("wake Time: "+String.valueOf(sharedPreferences.getInt("hours",6))+":"+String.valueOf(sharedPreferences.getInt("min",0)));
+
         changetime.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                textview1.setText(getCurrentTime());
                 editor.putInt("hours",timepicker.getCurrentHour());
                 editor.putInt("min",timepicker.getCurrentMinute());
                 editor.commit();
+                Intent intent = new Intent(Settings.this, MainActivity.class);
+                startActivity(intent);
+
             }
         });
 
     }
 
-    public String getCurrentTime(){
-        String currentTime="Wake Time: "+timepicker.getCurrentHour()+":"+timepicker.getCurrentMinute();
-        return currentTime;
-    }
 
 }
