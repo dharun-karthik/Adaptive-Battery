@@ -21,11 +21,18 @@
         </activity>
 
         <service
+            android:name=".NewService"
+            android:enabled="true"
+            android:exported="true"></service>
+
+        <service
             android:name=".MyService"
-            android:enabled="true"></service>
+            android:enabled="true"
+            android:exported="true"></service>
         <service
             android:name=".QSTile"
             android:label="Adaptive charging"
+            android:icon="@drawable/ic_ps"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />

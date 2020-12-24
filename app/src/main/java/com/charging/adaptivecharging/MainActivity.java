@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.service.quicksettings.Tile;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -18,7 +19,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
     TextView textview;
     Button button;
     ImageButton imgbutton;
@@ -53,15 +54,15 @@ public class MainActivity extends AppCompatActivity {
                     button.setVisibility(View.INVISIBLE);
                     editor.putBoolean(" ", true);
                     editor.commit();
-                    Intent intent = new Intent(getApplicationContext(), MyService.class);
-                    intent.setAction(MyService.ACTION_START_FOREGROUND_SERVICE);
-                    startService(intent);
+                    Intent intent = new Intent(getApplicationContext(), NewService.class);
+                    intent.setAction(NewService.ACTION_START_FOREGROUND_SERVICE);
+                    startForegroundService(intent);
                 }else{
                     imgbutton.setColorFilter(Color.argb(255, 255, 0, 0));
                     button.setVisibility(View.VISIBLE);
-                    Intent intent = new Intent(getApplicationContext(), MyService.class);
-                    intent.setAction(MyService.ACTION_STOP_FOREGROUND_SERVICE);
-                    startService(intent);
+                    Intent intent = new Intent(getApplicationContext(), NewService.class);
+                    intent.setAction(NewService.ACTION_STOP_FOREGROUND_SERVICE);
+                    startForegroundService(intent);
                     editor.putBoolean(" ", false);
                     editor.commit();
                 }
@@ -82,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
     private void runswitch() {
 
         final Handler handler = new Handler();
-
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -98,15 +98,17 @@ public class MainActivity extends AppCompatActivity {
                 }
 
 
-                if(sharedPreferences.getBoolean(" ", false)==true){
+                if(sharedPreferences.getBoolean(" ", false)){
                     button.setVisibility(View.INVISIBLE);
                     imgbutton.setColorFilter(Color.argb(255, 0, 255, 0));
                 }else{
                     button.setVisibility(View.VISIBLE);
                     imgbutton.setColorFilter(Color.argb(255, 255, 0, 0));
                 }
+                Log.d("run","running");
                 handler.postDelayed(this, 500);
             }
         });
     }
+
 }

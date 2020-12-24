@@ -11,23 +11,21 @@ import android.widget.Toast;
 
 public class QSTile extends TileService {
 
-    private Context f73c;
-    public int flag=0;
+    private Context context;
     public SharedPreferences sharedPreferences;
     private SharedPreferences.Editor sharedPreferenceEditor;
     Tile tile;
-
-    class C03711 implements SharedPreferences.OnSharedPreferenceChangeListener {
-        C03711() {
+    class shared implements SharedPreferences.OnSharedPreferenceChangeListener {
+        shared() {
         }
 
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             QSTile qSTileServiceWave = QSTile.this;
             qSTileServiceWave.tile = qSTileServiceWave.getQsTile();
             if (QSTile.this.sharedPreferences.getBoolean(" ", false)) {
-                QSTile.this.tile.setState(2);
+                QSTile.this.tile.setState(Tile.STATE_ACTIVE);
             } else {
-                QSTile.this.tile.setState(1);
+                QSTile.this.tile.setState(Tile.STATE_INACTIVE);
             }
             QSTile.this.tile.updateTile();
         }
@@ -35,39 +33,40 @@ public class QSTile extends TileService {
 
     @Override
     public void onStartListening() {
-        this.f73c = getApplicationContext();
-        this.sharedPreferences = getSharedPreferences(" ", 0);
-        this.sharedPreferences.registerOnSharedPreferenceChangeListener(new C03711());
-        this.tile = getQsTile();
-        Log.i("listening", String.valueOf(this.tile.getState()));
+        context = getApplicationContext();
+        sharedPreferences = getSharedPreferences(" ", MODE_PRIVATE);
+        sharedPreferences.registerOnSharedPreferenceChangeListener(new shared());
+        tile = getQsTile();
+        Log.i("listening", String.valueOf(tile.getState()));
     }
 
     @Override
     public void onClick() {
-        if (this.tile.getState() == 1) {
-            enableHandWave(this.f73c, true);
-            this.tile.setState(2);
-        } else if (this.tile.getState() == 2) {
-            enableHandWave(this.f73c, false);
-            this.tile.setState(1);
+        if (tile.getState() == 1) {
+            enableHandWave(context, true);
+            tile.setState(2);
+        } else if (tile.getState() == 2) {
+            enableHandWave(context, false);
+            tile.setState(1);
         }
-        this.tile.updateTile();
+        tile.updateTile();
 
     }
     public void enableHandWave(Context context, boolean state) {
-        this.sharedPreferences = context.getSharedPreferences(" ", 0);
-        this.sharedPreferenceEditor = this.sharedPreferences.edit();
+        sharedPreferences = context.getSharedPreferences(" ", MODE_PRIVATE);
+        sharedPreferenceEditor = sharedPreferences.edit();
         if (state) {
-            Intent intent = new Intent(context, MyService.class);
-            intent.setAction(MyService.ACTION_START_FOREGROUND_SERVICE);
-            startService(intent);
-            this.sharedPreferenceEditor.putBoolean(" ", true).apply();
+            Intent intent = new Intent(context, NewService.class);
+            intent.setAction(NewService.ACTION_START_FOREGROUND_SERVICE);
+            startForegroundService(intent);
+            sharedPreferenceEditor.putBoolean(" ", true);
+            sharedPreferenceEditor.commit();
             return;
         }else {
-            Intent intent = new Intent(context, MyService.class);
-            intent.setAction(MyService.ACTION_STOP_FOREGROUND_SERVICE);
-            startService(intent);
-            this.sharedPreferenceEditor.putBoolean(" ", false).apply();
+            Intent intent = new Intent(context, NewService.class);
+            intent.setAction(NewService.ACTION_STOP_FOREGROUND_SERVICE);
+            startForegroundService(intent);
+            sharedPreferenceEditor.putBoolean(" ", false).apply();
         }
     }
 }
