@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity{
     TextView textview;
     Button button;
     ImageButton imgbutton;
-
+    final Handler handler = new Handler();
     public SharedPreferences sharedPreferences,sp;
 
     @Override
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity{
 
     private void runswitch() {
 
-        final Handler handler = new Handler();
+
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -105,10 +105,15 @@ public class MainActivity extends AppCompatActivity{
                     button.setVisibility(View.VISIBLE);
                     imgbutton.setColorFilter(Color.argb(255, 255, 0, 0));
                 }
-                Log.d("run","running");
+//                Log.d("run","running");
                 handler.postDelayed(this, 500);
             }
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacksAndMessages(null);
+    }
 }
