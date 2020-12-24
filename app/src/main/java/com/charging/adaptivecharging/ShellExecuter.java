@@ -2,10 +2,14 @@ package com.charging.adaptivecharging;
 
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 
 public class ShellExecuter {
-
+    BufferedWriter bw;
+    BufferedReader br;
     public ShellExecuter() {
 
     }
@@ -43,5 +47,16 @@ public class ShellExecuter {
 
         return response;
 
+    }
+    public boolean rootCheck() {
+        try {
+            Process p;
+            p = Runtime.getRuntime().exec("su");
+            br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            bw = new BufferedWriter(new OutputStreamWriter(p.getOutputStream()));
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
     }
 }

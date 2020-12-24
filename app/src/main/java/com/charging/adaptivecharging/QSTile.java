@@ -3,14 +3,15 @@ package com.charging.adaptivecharging;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Handler;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
-import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+
 
 public class QSTile extends TileService {
 
@@ -20,51 +21,43 @@ public class QSTile extends TileService {
     Tile tile;
     final Handler handler = new Handler();
 
-    class shared implements SharedPreferences.OnSharedPreferenceChangeListener {
-        shared() {
-        }
-
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            QSTile qSTileServiceWave = QSTile.this;
-            qSTileServiceWave.tile = qSTileServiceWave.getQsTile();
-            if (QSTile.this.sharedPreferences.getBoolean(" ", false)) {
-                QSTile.this.tile.setState(Tile.STATE_ACTIVE);
-            } else {
-                QSTile.this.tile.setState(Tile.STATE_INACTIVE);
-            }
-            QSTile.this.tile.updateTile();
-        }
-    }
 
     @Override
     public void onStartListening() {
         context = getApplicationContext();
         sharedPreferences = getSharedPreferences(" ", MODE_PRIVATE);
-        //sharedPreferences.registerOnSharedPreferenceChangeListener(new shared());
         runswitch();
         tile = getQsTile();
-        Log.i("listening", String.valueOf(tile.getState()));
     }
 
     @Override
     public void onStopListening() {
         handler.removeCallbacksAndMessages(null);
-        Log.d("hell","stop listening");
     }
 
     @Override
     public void onClick() {
-        if (tile.getState() == 1) {
-            enableHandWave(context, true);
-            tile.setState(2);
-        } else if (tile.getState() == 2) {
-            enableHandWave(context, false);
-            tile.setState(1);
+        if (tile.getState() == Tile.STATE_INACTIVE) {
+            try {
+                Runtime.getRuntime().exec("su");
+
+                enable(context, true);
+                tile.setState(Tile.STATE_ACTIVE);
+            } catch (IOException e) {
+                Toast.makeText(getApplicationContext(), "Root Access Needed", Toast.LENGTH_SHORT).show();
+
+            }
         }
+        else if (tile.getState() == Tile.STATE_ACTIVE) {
+            enable(context, false);
+            tile.setState(Tile.STATE_INACTIVE);
+        }
+
+
         tile.updateTile();
 
     }
-    public void enableHandWave(Context context, boolean state) {
+    public void enable(Context context, boolean state) {
         sharedPreferences = context.getSharedPreferences(" ", MODE_PRIVATE);
         sharedPreferenceEditor = sharedPreferences.edit();
         if (state) {
@@ -96,8 +89,6 @@ public class QSTile extends TileService {
                     QSTile.this.tile.setState(Tile.STATE_INACTIVE);
                 }
                 QSTile.this.tile.updateTile();
-
-                Log.d("run","running");
                 handler.postDelayed(this, 500);
             }
         });

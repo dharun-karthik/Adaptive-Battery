@@ -7,13 +7,11 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
-import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -60,14 +58,13 @@ public class NewService extends Service{
             Integer ma=(int)(caprem/totalTime);
             if(ma>=Integer.parseInt(max)){
                 ma=Integer.parseInt(max);
-            }else if(ma<50){
-                ma=50;
+            }else if(ma<100){
+                ma=100;
             }
             ma*=1000;
 
 
             exe.Executer(ma.toString());
-            Log.d("Max_current",ma.toString());
             mhandler.postDelayed(this,120000);
         }
     };
@@ -94,7 +91,6 @@ public class NewService extends Service{
         } else if (i.getAction().equals(ACTION_STOP_FOREGROUND_SERVICE)) {
             mhandler.removeCallbacks(myRunnable);
             exe.Executer(max);
-            Log.d("Reverted",max);
             stopSelf();
             stopForeground(true);
 
