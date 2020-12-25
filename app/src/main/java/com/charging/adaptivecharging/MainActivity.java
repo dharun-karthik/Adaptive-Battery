@@ -18,6 +18,9 @@ import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
@@ -41,19 +44,19 @@ public class MainActivity extends AppCompatActivity{
         imgbutton.setColorFilter(Color.argb(255, 255, 0, 0));
         textview = (TextView)findViewById(R.id.textView);
 
-
         ShellExecuter exe = new ShellExecuter();
-        if(!(exe.rootCheck())){
+        if(!exe.RootCheck()){
+            Toast.makeText(getApplicationContext(),"Root Access Needed",Toast.LENGTH_SHORT).show();
             finish();
-
+            System.exit(0);
         }
+
         sharedPreferences = getSharedPreferences(" ", MODE_PRIVATE);
         sp = getSharedPreferences("wakeTime", MODE_PRIVATE);
         final SharedPreferences.Editor editor = sharedPreferences.edit();
         final SharedPreferences.Editor editsp = sp.edit();
-        //switch1.setChecked(sharedPreferences.getBoolean(" ", false));
         runswitch();
-        Log.d("tag",exe.Get("cat cat /sys/class/power_supply/battery/charge_full"));
+        //Log.d("tag",exe.Get("cat cat /sys/class/power_supply/battery/charge_full"));
 
         imgbutton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -20,6 +20,7 @@ public class QSTile extends TileService {
     private SharedPreferences.Editor sharedPreferenceEditor;
     Tile tile;
     final Handler handler = new Handler();
+    ShellExecuter exe = new ShellExecuter();
 
 
     @Override
@@ -37,20 +38,17 @@ public class QSTile extends TileService {
 
     @Override
     public void onClick() {
-        if (tile.getState() == Tile.STATE_INACTIVE) {
-            try {
-                Runtime.getRuntime().exec("su");
-
+        if(exe.RootCheck()) {
+            if (tile.getState() == Tile.STATE_INACTIVE) {
                 enable(context, true);
                 tile.setState(Tile.STATE_ACTIVE);
-            } catch (IOException e) {
-                Toast.makeText(getApplicationContext(), "Root Access Needed", Toast.LENGTH_SHORT).show();
-
             }
-        }
-        else if (tile.getState() == Tile.STATE_ACTIVE) {
-            enable(context, false);
-            tile.setState(Tile.STATE_INACTIVE);
+            else if (tile.getState() == Tile.STATE_ACTIVE) {
+                enable(context, false);
+                tile.setState(Tile.STATE_INACTIVE);
+            }
+        }else{
+            Toast.makeText(getApplicationContext(),"Root Access Needed",Toast.LENGTH_SHORT).show();
         }
 
 

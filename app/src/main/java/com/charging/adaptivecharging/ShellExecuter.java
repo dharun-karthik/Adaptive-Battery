@@ -1,11 +1,18 @@
 package com.charging.adaptivecharging;
 
 
+import android.content.Context;
+import android.util.Log;
+import android.widget.Toast;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.security.PublicKey;
 
 public class ShellExecuter {
     BufferedWriter bw;
@@ -48,15 +55,54 @@ public class ShellExecuter {
         return response;
 
     }
-    public boolean rootCheck() {
-        try {
-            Process p;
-            p = Runtime.getRuntime().exec("su");
-            br = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            bw = new BufferedWriter(new OutputStreamWriter(p.getOutputStream()));
-            return true;
-        } catch (IOException e) {
-            return false;
+
+
+    public  boolean RootCheck()
+    {
+        boolean retval = false;
+        Process suProcess;
+        try
+        {
+            suProcess = Runtime.getRuntime().exec("su");
+            DataOutputStream os = new DataOutputStream(suProcess.getOutputStream());
+            DataInputStream osRes = new DataInputStream(suProcess.getInputStream());
+
+            if (null != os && null != osRes)
+            {
+                os.writeBytes("id\n");
+                os.flush();
+
+                String currUid = osRes.readLine();
+                boolean exitSu = false;
+                if (null == currUid)
+                {
+                    retval = false;
+                }
+                else if (true == currUid.contains("uid=0"))
+                {
+                    retval = true;
+                    exitSu = true;
+
+                }
+                else
+                {
+                    retval = false;
+                    exitSu = true;
+                }
+
+                if (exitSu)
+                {
+                    os.writeBytes("exit\n");
+                    os.flush();
+                }
+            }
         }
+        catch (Exception e)
+        {
+
+            retval = false;
+        }
+
+        return retval;
     }
 }
