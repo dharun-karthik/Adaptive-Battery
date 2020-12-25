@@ -12,6 +12,7 @@ import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -74,35 +75,34 @@ public class NewService extends Service{
 
     public int onStartCommand(Intent i, int flag, int startID) {
         if (i.getAction().equals(ACTION_START_FOREGROUND_SERVICE)) {
-
-
-            cap=Integer.parseInt(exe.Get("cat /sys/class/power_supply/battery/charge_full"));
+            try {
+                max = exe.Get("cat /sys/class/power_supply/battery/constant_charge_current_max");
+                cap = Integer.parseInt(exe.Get("cat /sys/class/power_supply/battery/charge_full"));
+            } catch (Exception e) {
+                Toast.makeText(getApplicationContext(),"Device Not Supported",Toast.LENGTH_SHORT).show();
+                stopSelf();
+                stopForeground(true);
+            }
             cap/=1000;
             sharedPreferences = getSharedPreferences("wakeTime", MODE_PRIVATE);
             final SharedPreferences.Editor editor = sharedPreferences.edit();
             h=sharedPreferences.getInt("hours",6);
             m=sharedPreferences.getInt("min",0);
-
-
-            max=exe.Get("cat /sys/class/power_supply/battery/constant_charge_current_max");
             myRunnable.run();
-            //Toast.makeText(getApplicationContext(), "Adaptive Charging Enabled", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Adaptive Charging Enabled", Toast.LENGTH_LONG).show();
 
         } else if (i.getAction().equals(ACTION_STOP_FOREGROUND_SERVICE)) {
             mhandler.removeCallbacks(myRunnable);
             exe.Executer(max);
             stopSelf();
             stopForeground(true);
-
+            Toast.makeText(getApplicationContext(), "Adaptive Charging Disabled", Toast.LENGTH_LONG).show();
 
         }
         return START_STICKY;
     }
 
     public void onCreate() {
-        //this.proximitySensorDetails = new ProximitySensorDetails(this);
-        //this.mSensorManager = (SensorManager) getSystemService("sensor");
-        //this.mProximity = this.mSensorManager.getDefaultSensor(8);
 
         if (Build.VERSION.SDK_INT >= 26) {
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
