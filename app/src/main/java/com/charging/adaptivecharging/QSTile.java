@@ -8,15 +8,11 @@ import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-
 
 public class QSTile extends TileService {
 
     private Context context;
-    public SharedPreferences sharedPreferences;
+    public SharedPreferences sharedPreferences,sp;
     private SharedPreferences.Editor sharedPreferenceEditor;
     Tile tile;
     final Handler handler = new Handler();
@@ -42,6 +38,7 @@ public class QSTile extends TileService {
             if (tile.getState() == Tile.STATE_INACTIVE) {
                 enable(context, true);
                 tile.setState(Tile.STATE_ACTIVE);
+
             }
             else if (tile.getState() == Tile.STATE_ACTIVE) {
                 enable(context, false);
@@ -69,7 +66,9 @@ public class QSTile extends TileService {
             Intent intent = new Intent(context, NewService.class);
             intent.setAction(NewService.ACTION_STOP_FOREGROUND_SERVICE);
             startForegroundService(intent);
-            sharedPreferenceEditor.putBoolean(" ", false).apply();
+            sharedPreferenceEditor.putBoolean(" ", false);
+            sharedPreferenceEditor.commit();
+            return;
         }
     }
     private void runswitch() {

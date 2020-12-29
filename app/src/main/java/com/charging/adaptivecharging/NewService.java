@@ -13,7 +13,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.widget.Toast;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -25,7 +24,7 @@ public class NewService extends Service{
     private static final String TAG_FOREGROUND_SERVICE = "FOREGROUND_SERVICE";
     public static final String ACTION_START_FOREGROUND_SERVICE = "ACTION_START_FOREGROUND_SERVICE";
     public static final String ACTION_STOP_FOREGROUND_SERVICE = "ACTION_STOP_FOREGROUND_SERVICE";
-    public SharedPreferences sharedPreferences;
+    public SharedPreferences sharedPreferences,sp;
     public Integer h;
     public Integer m;
     public Integer cap;
@@ -74,12 +73,17 @@ public class NewService extends Service{
 
 
     public int onStartCommand(Intent i, int flag, int startID) {
+        sp = getSharedPreferences(" ", MODE_PRIVATE);
+        final SharedPreferences.Editor editsp = sp.edit();
+
         if (i.getAction().equals(ACTION_START_FOREGROUND_SERVICE)) {
             try {
                 max = exe.Get("cat /sys/class/power_supply/battery/constant_charge_current_max");
                 cap = Integer.parseInt(exe.Get("cat /sys/class/power_supply/battery/charge_full"));
             } catch (Exception e) {
                 Toast.makeText(getApplicationContext(),"Device Not Supported",Toast.LENGTH_SHORT).show();
+                editsp.putBoolean(" ", false);
+                editsp.commit();
                 stopSelf();
                 stopForeground(true);
             }

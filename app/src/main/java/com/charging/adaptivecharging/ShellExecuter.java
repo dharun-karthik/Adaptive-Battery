@@ -2,14 +2,11 @@ package com.charging.adaptivecharging;
 
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 
 public class ShellExecuter {
-    BufferedWriter bw;
-    BufferedReader br;
     public ShellExecuter() {
 
     }
