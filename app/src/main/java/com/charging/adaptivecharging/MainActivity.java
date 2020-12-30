@@ -36,10 +36,12 @@ public class MainActivity extends AppCompatActivity{
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
+
         button = (ImageButton) findViewById(R.id.button);
         imgbutton = (ImageButton) this.findViewById(R.id.imageButton2);
         imgbutton.setColorFilter(Color.argb(255, 255, 0, 0));
         textview = (TextView)findViewById(R.id.textView);
+
 
 
         ShellExecuter exe = new ShellExecuter();
@@ -53,13 +55,13 @@ public class MainActivity extends AppCompatActivity{
         final SharedPreferences.Editor editsp = sp.edit();
         //switch1.setChecked(sharedPreferences.getBoolean(" ", false));
         runswitch();
-        Log.d("tag",exe.Get("cat cat /sys/class/power_supply/battery/charge_full"));
+        //Log.d("tag",exe.Get("cat cat /sys/class/power_supply/battery/charge_full"));
 
         imgbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(sharedPreferences.getBoolean(" ", false)==false){
-                    imgbutton.setColorFilter(Color.argb(255, 0, 255, 0));
+                    imgbutton.setColorFilter(Color.argb(255, 0, 242, 254));
                     button.setVisibility(View.INVISIBLE);
                     editor.putBoolean(" ", true);
                     editor.commit();
@@ -67,7 +69,7 @@ public class MainActivity extends AppCompatActivity{
                     intent.setAction(NewService.ACTION_START_FOREGROUND_SERVICE);
                     startForegroundService(intent);
                 }else{
-                    imgbutton.setColorFilter(Color.argb(255, 255, 0, 0));
+                    imgbutton.setColorFilter(Color.argb(255, 33, 147, 176));
                     button.setVisibility(View.VISIBLE);
                     Intent intent = new Intent(getApplicationContext(), NewService.class);
                     intent.setAction(NewService.ACTION_STOP_FOREGROUND_SERVICE);
@@ -121,10 +123,10 @@ public class MainActivity extends AppCompatActivity{
 
                 if(sharedPreferences.getBoolean(" ", false)){
                     button.setVisibility(View.INVISIBLE);
-                    imgbutton.setColorFilter(Color.argb(255, 0, 255, 0));
+                    imgbutton.setColorFilter(Color.argb(255, 0, 242, 254));
                 }else{
                     button.setVisibility(View.VISIBLE);
-                    imgbutton.setColorFilter(Color.argb(255, 255, 0, 0));
+                    imgbutton.setColorFilter(Color.argb(255, 33, 147, 176));
                 }
 
                 handler.postDelayed(this, 500);
