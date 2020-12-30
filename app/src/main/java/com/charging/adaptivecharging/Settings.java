@@ -1,7 +1,6 @@
 package com.charging.adaptivecharging;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -41,15 +40,14 @@ public class Settings extends AppCompatActivity {
                 Intent intent = new Intent(Settings.this, MainActivity.class);
                 startActivity(intent);
                 finish();
-
             }
         });
-
     }
 
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(Settings.this, MainActivity.class);
         startActivity(intent);
+        finish();
     }
 }

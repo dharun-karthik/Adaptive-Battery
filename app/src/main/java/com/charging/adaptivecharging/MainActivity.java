@@ -34,13 +34,6 @@ public class MainActivity extends AppCompatActivity{
         imgbutton.setColorFilter(Color.argb(255, 255, 0, 0));
         textview = (TextView)findViewById(R.id.textView);
 
-        ShellExecuter exe = new ShellExecuter();
-        if(!exe.RootCheck()){
-            Toast.makeText(getApplicationContext(),"Root Access Needed",Toast.LENGTH_SHORT).show();
-            finish();
-            System.exit(0);
-        }
-
         sharedPreferences = getSharedPreferences(" ", MODE_PRIVATE);
         sp = getSharedPreferences("wakeTime", MODE_PRIVATE);
         final SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -81,6 +74,8 @@ public class MainActivity extends AppCompatActivity{
         });
 
     }
+
+
 
     private void runswitch() {
 
