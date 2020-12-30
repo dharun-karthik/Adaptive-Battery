@@ -40,11 +40,16 @@ public class Settings extends AppCompatActivity {
                 editor.commit();
                 Intent intent = new Intent(Settings.this, MainActivity.class);
                 startActivity(intent);
+                finish();
 
             }
         });
 
     }
 
-
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(Settings.this, MainActivity.class);
+        startActivity(intent);
+    }
 }

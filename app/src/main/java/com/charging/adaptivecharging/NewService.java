@@ -21,7 +21,6 @@ public class NewService extends Service{
     private static final String CHANNEL = "Adaptivecharging_notification_channel";
     private static final String notificationText = "Adaptive Charging Enabled";
     private static final String notificationTitle = "Services";
-    private static final String TAG_FOREGROUND_SERVICE = "FOREGROUND_SERVICE";
     public static final String ACTION_START_FOREGROUND_SERVICE = "ACTION_START_FOREGROUND_SERVICE";
     public static final String ACTION_STOP_FOREGROUND_SERVICE = "ACTION_STOP_FOREGROUND_SERVICE";
     public SharedPreferences sharedPreferences,sp;
