@@ -1,25 +1,18 @@
 package com.charging.adaptivecharging;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 
 public class MainActivity extends AppCompatActivity{
     TextView textview;
@@ -36,24 +29,22 @@ public class MainActivity extends AppCompatActivity{
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
-
         button = (ImageButton) findViewById(R.id.button);
         imgbutton = (ImageButton) this.findViewById(R.id.imageButton2);
         imgbutton.setColorFilter(Color.argb(255, 255, 0, 0));
         textview = (TextView)findViewById(R.id.textView);
 
-
-
         ShellExecuter exe = new ShellExecuter();
-        if(!(exe.rootCheck())){
+        if(!exe.RootCheck()){
+            Toast.makeText(getApplicationContext(),"Root Access Needed",Toast.LENGTH_SHORT).show();
             finish();
-
+            System.exit(0);
         }
+
         sharedPreferences = getSharedPreferences(" ", MODE_PRIVATE);
         sp = getSharedPreferences("wakeTime", MODE_PRIVATE);
         final SharedPreferences.Editor editor = sharedPreferences.edit();
         final SharedPreferences.Editor editsp = sp.edit();
-        //switch1.setChecked(sharedPreferences.getBoolean(" ", false));
         runswitch();
         //Log.d("tag",exe.Get("cat cat /sys/class/power_supply/battery/charge_full"));
 
@@ -85,6 +76,7 @@ public class MainActivity extends AppCompatActivity{
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, Settings.class);
                 startActivity(intent);
+                finish();
             }
         });
 
