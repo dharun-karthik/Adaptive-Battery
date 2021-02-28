@@ -16,7 +16,6 @@
         android:forceHasOverlappingRendering="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.83"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageButton2"
         app:layout_constraintVertical_bias="0.809"
@@ -39,18 +38,19 @@
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="147dp"
-        android:layout_height="51dp"
+        android:layout_width="173dp"
+        android:layout_height="67dp"
         android:fontFamily="@font/blox"
+        android:gravity="center"
         android:text="TextView"
-        android:textColor="#ffff"
-        android:textSize="40dp"
+        android:textAlignment="center"
+        android:textColor="#00f1fe"
+        android:textSize="30dp"
         android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.244"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageButton2"
-        app:layout_constraintVertical_bias="0.761" />
+        app:layout_constraintVertical_bias="0.433" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

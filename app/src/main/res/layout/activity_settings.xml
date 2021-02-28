@@ -9,13 +9,13 @@
 
     <Button
         android:id="@+id/button1"
-        android:layout_width="119dp"
-        android:layout_height="55dp"
+        android:layout_width="116dp"
+        android:layout_height="45dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:text="Change Time"
+        android:background="@drawable/buttonbg"
+        android:text="Change"
         android:textColor="#ffff"
-        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

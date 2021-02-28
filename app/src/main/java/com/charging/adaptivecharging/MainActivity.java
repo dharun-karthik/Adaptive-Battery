@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity{
                         s=(String.valueOf(sp.getInt("hours",6))+":0"+String.valueOf(sp.getInt("min",00))+" AM");
                     }
                 }
-                textview.setText(s);
+                textview.setText("Wake Time\n"+s);
 
 
                 if(sharedPreferences.getBoolean(" ", false)){

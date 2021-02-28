@@ -116,7 +116,7 @@ public class NewService extends Service{
             }
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0);
             Notification.Builder builder = new Notification.Builder(this, CHANNEL);
-            builder.setContentTitle(notificationTitle).setContentText(notificationText).setSmallIcon(R.drawable.ic_ps).setContentIntent(pendingIntent).setOngoing(true);
+            builder.setContentTitle(notificationTitle).setContentText(notificationText).setSmallIcon(R.drawable.ic_noti).setContentIntent(pendingIntent).setOngoing(true);
             startForeground(3, builder.build());
         }
     }

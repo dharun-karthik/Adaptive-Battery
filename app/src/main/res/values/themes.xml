@@ -26,9 +26,9 @@
 
     <style name="TimePickerDialogStyle" parent="@android:style/Widget.Material.Light.TimePicker">
         <item name="colorAccent">#12FFF7</item>
+        <item name="android:numbersTextColor">#fff</item>
+        <item name="android:numbersBackgroundColor">#0000ffff</item>
         <item name="android:timePickerMode">clock</item>
         <item name="android:headerBackground"> #0000ffff</item>
-
-
     </style>
 </resources>
